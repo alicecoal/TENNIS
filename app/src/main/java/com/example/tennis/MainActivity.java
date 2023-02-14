@@ -1,10 +1,12 @@
 package com.example.tennis;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -15,6 +17,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
     SensorManager sensorManager;
     Sensor sensor;
     SensorEventListener sensorEventListener;
+    public EditText name;
+    Button btnSubmit;
+    TextView createAcc;
+    DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +48,42 @@ public class MainActivity extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         sharedPreferences = getSharedPreferences("my_pref",0);
+        Boolean e=false,p=false;
+        name=findViewById(R.id.text_email);
+        btnSubmit = findViewById(R.id.btnSubmit_login);
+        dbHelper = new DBHelper(this);
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String nameCheck = name.getText().toString();
+                Cursor cursor = dbHelper.getData();
+                if (loginCheck(cursor,nameCheck)) {
+                    Intent intent = new Intent(view.getContext(),GameView.class);
+                    intent.putExtra("name",nameCheck);
+                    GameView.setName(nameCheck);
+                    name.setText("");
+                    startActivity(intent);
+                }else {
+                    boolean b =dbHelper.insetUserData(nameCheck,"0");
+                    Intent intent = new Intent(view.getContext(),GameView.class);
+                    intent.putExtra("name",nameCheck);
+                    name.setText("");
+                    GameView.setName(nameCheck);
+                    startActivity(intent);
+                }
+                dbHelper.close();
+            }
+        });
         createSensors();
+    }
+
+    public static boolean loginCheck(Cursor cursor,String nameCheck) {
+        while (cursor.moveToNext()){
+            if (cursor.getString(0).equals(nameCheck)) {
+                return true;
+            } else return false;
+        }
+        return false;
     }
 
     public void createSensors() {
@@ -71,10 +122,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void startGame(View view) {
+    /*public void startGame(View view) {
         GameView gameView = new GameView(this);
         setContentView(gameView);
-    }
+    }*/
 
     // create on resume method
     @Override

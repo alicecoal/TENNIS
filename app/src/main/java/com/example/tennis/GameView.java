@@ -13,6 +13,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
@@ -37,9 +38,7 @@ public class GameView extends View {
     Bitmap ball, paddle;
     int dWidth, dHeight;
     Random random;
-
-
-
+    static String name;
 
     public GameView(Context context) {
         super(context);
@@ -71,6 +70,7 @@ public class GameView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
         canvas.drawColor(Color.rgb(33,99,00));
         ballX += velocity.getX();
         ballY += velocity.getY();
@@ -89,6 +89,7 @@ public class GameView extends View {
             if (life == 0){
                 Intent intent = new Intent(context, GameOver.class);
                 intent.putExtra("points",points);
+                intent.putExtra("name",name);
                 context.startActivity(intent);
                 ((Activity)context).finish();
             }
@@ -110,6 +111,9 @@ public class GameView extends View {
         handler.postDelayed(runnable, UPDATE_MILLIS);
     }
 
+    public static void setName(String name1){
+        name=name1;
+    }
 
 
     /*@Override
