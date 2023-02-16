@@ -19,13 +19,22 @@ import android.view.View;
 import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cursoradapter.widget.SimpleCursorAdapter;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -40,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnSubmit;
     TextView createAcc;
     DBHelper dbHelper;
+    static String player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,24 +67,56 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String nameCheck = name.getText().toString();
                 Cursor cursor = dbHelper.getData();
-                if (loginCheck(cursor,nameCheck)) {
-                    Intent intent = new Intent(view.getContext(),GameView.class);
-                    intent.putExtra("name",nameCheck);
-                    GameView.setName(nameCheck);
+                if (checkName(nameCheck)){
+                    boolean b =dbHelper.insetUserData(nameCheck,"0");player=nameCheck;
                     name.setText("");
-                    startActivity(intent);
-                }else {
-                    boolean b =dbHelper.insetUserData(nameCheck,"0");
-                    Intent intent = new Intent(view.getContext(),GameView.class);
-                    intent.putExtra("name",nameCheck);
-                    name.setText("");
-                    GameView.setName(nameCheck);
-                    startActivity(intent);
+                    GameView gameView = new GameView(view.getContext());
+                    setContentView(gameView);
+                    dbHelper.close();
                 }
-                dbHelper.close();
             }
         });
         createSensors();
+
+    }
+
+    public boolean checkName(String player_name){
+        if (player_name=="") return false;
+        return true;
+    }
+
+    public void hideRate(View view){
+        LinearLayout l = findViewById(R.id.list_rate);
+        ListView lv = findViewById(R.id.user_list);
+        LinearLayout m = findViewById(R.id.start);
+        l.setVisibility(View.GONE);
+        m.setVisibility(View.VISIBLE);
+        lv.setAdapter(null);
+    }
+
+    public static String getName(){
+        return player;
+    }
+
+    public void showRate(View view){
+        Cursor cursor = dbHelper.getData();
+        ListView lv = findViewById(R.id.user_list);
+        LinearLayout l = findViewById(R.id.list_rate);
+        LinearLayout m = findViewById(R.id.start);
+        ArrayList<HashMap<String, String>> userList = new ArrayList<>();
+        while (cursor.moveToNext()){
+            HashMap<String,String> user = new HashMap<>();
+            user.put("name",cursor.getString(0));
+            user.put("number",cursor.getString(1));
+            userList.add(user);
+        }
+        ListAdapter adapter = new SimpleAdapter(this, userList,
+                R.layout.list_row, new String[]{"name","number"},
+                new int[]{R.id.name, R.id.number});
+        lv.setAdapter(adapter);
+        m.setVisibility(View.GONE);
+        l.setVisibility(View.VISIBLE);
+
     }
 
     public static boolean loginCheck(Cursor cursor,String nameCheck) {

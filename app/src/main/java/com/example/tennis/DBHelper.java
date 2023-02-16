@@ -12,18 +12,18 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(SQLiteDatabase DB) {
-        DB.execSQL("create Table UserDetails(name TEXT primary key, number NUMBER)");
+        DB.execSQL("CREATE TABLE USERDETAILS (NAME TEXT PRIMARY KEY, NUMBER INTEGER NOT NULL);");
     }
     @Override
     public void onUpgrade(SQLiteDatabase DB, int i, int i1) {
-        DB.execSQL("drop Table if exists UserDetails");
+        DB.execSQL("drop Table if exists USERDETAILS");
     }
     public Boolean insetUserData(String name,String number){
         SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("name",name);
         contentValues.put("number",number);
-        long result= DB.insert("UserDetails",null,contentValues);
+        long result= DB.insert("USERDETAILS",null, contentValues);
         if (result == -1){
             return false;
         }else {
@@ -35,12 +35,18 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("number",number);
-        DB.update("UserDetails",contentValues, "_name = ?", new String[]{name});
+        DB.update("USERDETAILS",contentValues, "name = ?", new String[]{name});
     }
 
     public Cursor getData(){
         SQLiteDatabase DB = this.getWritableDatabase();
-        Cursor cursor = DB.rawQuery("Select * from Userdetails order by number DESC",null);
+        Cursor cursor = DB.rawQuery("SELECT * FROM USERDETAILS ORDER BY number DESC",null);
         return cursor;
+    }
+
+    public void deleteCourse(String courseName){
+        SQLiteDatabase DB = this.getWritableDatabase();
+        DB.delete("USERDETAILS", "name=?", new String[]{courseName});
+        DB.close();
     }
 }

@@ -39,6 +39,7 @@ public class GameView extends View {
     int dWidth, dHeight;
     Random random;
     static String name;
+    Context _context;
 
     public GameView(Context context) {
         super(context);
@@ -65,6 +66,7 @@ public class GameView extends View {
         ballX = random.nextInt(dWidth);
         paddleY = (dHeight*4)/5;
         paddleX = dWidth/2 - paddle.getWidth()/2;
+        name = MainActivity.getName();
     }
 
     @Override
@@ -101,6 +103,7 @@ public class GameView extends View {
         }
         canvas.drawBitmap(ball, ballX, ballY, null);
         canvas.drawBitmap(paddle, paddleX, paddleY, null);
+        canvas.drawText(""+name, 120, TEXT_SIZE, textPaint);
         canvas.drawText(""+points, 20, TEXT_SIZE, textPaint);
         if (life == 2){
             healthPaint.setColor(Color.YELLOW);
@@ -109,10 +112,6 @@ public class GameView extends View {
         }
         canvas.drawRect(dWidth-200, 30, dWidth-200+60*life, 80, healthPaint);
         handler.postDelayed(runnable, UPDATE_MILLIS);
-    }
-
-    public static void setName(String name1){
-        name=name1;
     }
 
 

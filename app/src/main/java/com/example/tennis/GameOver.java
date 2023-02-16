@@ -18,6 +18,7 @@ public class GameOver extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     ImageView ivNewHighest;
     DBHelper dbHelper;
+    int highest;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,20 +31,17 @@ public class GameOver extends AppCompatActivity {
         String name = getIntent().getStringExtra("name");
         tvPoints.setText(""+points);
         sharedPreferences = getSharedPreferences("my_pref", 0);
-        int highest = sharedPreferences.getInt("highest",0);
-        if (check(points, highest)){
-            ivNewHighest.setVisibility(View.VISIBLE);
-            dbHelper = new DBHelper(this);
-            Cursor cursor = dbHelper.getData();
-            while (cursor.moveToNext()){
-                if (cursor.getString(0).equals(name)) {
-                        dbHelper.updateUserData(name, Integer.toString(points));
+        dbHelper = new DBHelper(this);
+        Cursor cursor = dbHelper.getData();
+        while (cursor.moveToNext()){
+            if (cursor.getString(0).equals(name)) {
+                highest = cursor.getInt(1);
+                if (check(points, highest)){
+                    ivNewHighest.setVisibility(View.VISIBLE);
+                    highest = points;
                 }
+                dbHelper.updateUserData(name, Integer.toString(highest));
             }
-            highest = points;
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt("highest",highest);
-            editor.commit();
         }
         tvHighest.setText(""+highest);
     }

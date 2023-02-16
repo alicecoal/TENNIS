@@ -9,32 +9,79 @@
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:baselineAligned="false"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/imageButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:srcCompat="@android:drawable/btn_dialog" />
 
         <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:srcCompat="@android:drawable/btn_star_big_on" />
+            android:id="@+id/back"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:onClick="hideRate"
+            app:srcCompat="@android:drawable/btn_dialog"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/rate"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="end"
+            android:layout_marginStart="250dp"
+            app:srcCompat="@android:drawable/btn_star_big_on"
+            tools:ignore="SpeakableTextPresentCheck"
+            android:onClick="showRate"/>
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/list_rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginBottom="50dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:text="Rate of Players"
+            android:textAlignment="center"
+            android:textColor="#812B2B"
+            android:textSize="30dp"
+            android:textStyle="bold" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#B5E8C2">
+
+            <ListView
+                android:id="@+id/user_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/back"
+                android:dividerHeight="1dp"
+                android:verticalScrollbarPosition="defaultPosition"
+                android:visibility="visible" />
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="200dp"
         android:orientation="vertical"
         android:visibility="visible">
 
@@ -48,7 +95,8 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/img" />
+                android:background="@drawable/img"
+                tools:ignore="SpeakableTextPresentCheck" />
 
             <TextView
                 android:layout_width="wrap_content"
