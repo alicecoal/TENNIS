@@ -1,6 +1,6 @@
 # TENNIS
 
-![Document](https://ltdfoto.ru/images/2023/01/18/photo1673907918.jpg)
+![Document](https://imageup.ru/img192/4217981/img_20230117_011912.jpg)
 
 
 Задание(Вариант 3(4/2+1)):
